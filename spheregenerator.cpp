@@ -339,7 +339,7 @@ TriangleSoup generateStl(double radius, const std::vector<double> &origin, int r
                     std::vector<double> n;
                     n = getNormals(Sphere[triangleCount].A, Sphere[triangleCount].B, Sphere[triangleCount].C);
 
-                    out << "\tfacet normal " << -n[0] << " " << -n[1] << " " << -n[2] << "\n";
+                    out << "\tfacet normal " << n[0] << " " << n[1] << " " << n[2] << "\n";
                     out << "\t\touter loop" << "\n";
 
                     out << "\t\t\tvertex " << Sphere[triangleCount].A.x << " " << Sphere[triangleCount].A.y << " " << Sphere[triangleCount].A.z << "\n";
