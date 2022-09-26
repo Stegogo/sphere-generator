@@ -188,9 +188,9 @@ TriangleSoup generateStl(double radius, const std::vector<double> &origin, int r
         //! Add the middle part of the sphere (1 < rings < 9)
         //--------------------------------------------------------------------
 
-        for (int r = 1; r < 9; r++)
+        for (int r = 1; r < rings - 1; r++)
         {
-            for (int s = 0; s < slices; s++)
+            for (int s = 0; s < slices - 1; s++)
             {
                 
                 // Adding first triangle
@@ -273,7 +273,7 @@ TriangleSoup generateStl(double radius, const std::vector<double> &origin, int r
 
         //Last sequence----------------------------------------------------------------------------------
 
-        for (int r = 1; r < rings; r++)
+        for (int r = 1; r < rings - 1; r++)
         {
                 
                 // Adding first triangle
@@ -357,7 +357,7 @@ TriangleSoup generateStl(double radius, const std::vector<double> &origin, int r
         //! Add the last pole (rings = rings)
         //--------------------------------------------------------------------
 
-        for (int s = 0; s < slices; s++)
+        for (int s = 0; s < slices - 1; s++)
         {
             Sphere[triangleCount].A = {0, -radius, 0, rings, slices};
             
