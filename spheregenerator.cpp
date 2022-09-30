@@ -1,27 +1,27 @@
+#include "spheregenerator.h"
 #include <fstream>
-#include <vector>
 #include <cmath>
 #include <iostream>
 #include <algorithm>
 
-//==================================================
-struct Vec
+
+SphereGenerator::SphereGenerator(/* args */)
 {
-    double x, y, z;
-    int ringIndex;
-    int sliceIndex;
-};
+}
 
-struct Triangle
+SphereGenerator::SphereGenerator(double newRadius, int newRings, int newSlices, std::vector<double> newOrigin)
 {
-    Vec A, B, C;
-    Vec normal;
-};
+    radius = newRadius;
+    rings = newRings;
+    slices = newSlices;
+    Sphere = TriangleSoup(rings * slices * 3);
+}
 
-using TriangleSoup = std::vector<Triangle>;
-//==================================================
+SphereGenerator::~SphereGenerator()
+{
+}
 
-std::vector<double> getNormals(Vec A, Vec B, Vec C)
+std::vector<double> SphereGenerator::getNormals(Vec A, Vec B, Vec C)
 {
 
     std::vector<double> v1, v2;
@@ -47,7 +47,7 @@ std::vector<double> getNormals(Vec A, Vec B, Vec C)
     return n;
 }
 
-TriangleSoup generateStl(double radius, const std::vector<double> &origin, int rings, int slices)
+TriangleSoup SphereGenerator::generateStl()
 {
     TriangleSoup Sphere(rings * slices * 3);
     int triangleCount = 0;
@@ -444,17 +444,4 @@ TriangleSoup generateStl(double radius, const std::vector<double> &origin, int r
         out.close();
     }
     return Sphere;
-}
-
-int main()
-{
-    // Initializing sphere parameters
-    double radius = 1.5;                 // RADIUS
-    std::vector<double> origin{0, 0, 0}; // ORIGIN
-    int rings = 100;                      // RINGS
-    int slices = 100;                     // SLICES
-
-    // Calling a function to give us an ASCII STL file
-    generateStl(radius, origin, rings, slices);
-    return 0;
 }
