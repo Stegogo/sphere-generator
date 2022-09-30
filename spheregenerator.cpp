@@ -49,7 +49,7 @@ std::vector<double> getNormals(Vec A, Vec B, Vec C)
 
 TriangleSoup generateStl(double radius, const std::vector<double> &origin, int rings, int slices)
 {
-    TriangleSoup Sphere(300);
+    TriangleSoup Sphere(rings * slices * 3);
     int triangleCount = 0;
 
     std::ofstream out("sphere.stl");
@@ -114,7 +114,7 @@ TriangleSoup generateStl(double radius, const std::vector<double> &origin, int r
             }
         }
         // Add the last vertex
-        points.push_back({0, -radius, 0, rings, slices});
+        //points.push_back({-origin[0], origin[1] + radius, origin[2], rings, slices});
 
         //--------------------------------------------------------------------
         //! Add the first pole (rings = 1)
@@ -449,10 +449,10 @@ TriangleSoup generateStl(double radius, const std::vector<double> &origin, int r
 int main()
 {
     // Initializing sphere parameters
-    double radius = 1.0;                 // RADIUS
+    double radius = 1.5;                 // RADIUS
     std::vector<double> origin{0, 0, 0}; // ORIGIN
-    int rings = 10;                      // RINGS
-    int slices = 10;                     // SLICES
+    int rings = 100;                      // RINGS
+    int slices = 100;                     // SLICES
 
     // Calling a function to give us an ASCII STL file
     generateStl(radius, origin, rings, slices);
