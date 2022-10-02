@@ -21,15 +21,19 @@ private:
     double radius;
     int rings;
     int slices;
+    int triangleCount;
 
-    //TriangleSoup Sphere;
+    void print(TriangleSoup Sphere);
 
     std::vector<double> origin;
     std::vector<double> getNormals(Vec A, Vec B, Vec C);
+
+    TriangleSoup generateStl();
 
 public:
     SphereGenerator();
     SphereGenerator(double radius, int rings, int slices, std::vector<double> origin);
     ~SphereGenerator();
-    TriangleSoup generateStl();
+
+    void exec();
 };
