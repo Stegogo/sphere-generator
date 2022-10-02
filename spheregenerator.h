@@ -22,7 +22,7 @@ private:
     int rings;
     int slices;
 
-    TriangleSoup Sphere;
+    //TriangleSoup Sphere;
 
     std::vector<double> origin;
     std::vector<double> getNormals(Vec A, Vec B, Vec C);

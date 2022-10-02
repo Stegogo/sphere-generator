@@ -14,7 +14,8 @@ SphereGenerator::SphereGenerator(double newRadius, int newRings, int newSlices, 
     radius = newRadius;
     rings = newRings;
     slices = newSlices;
-    Sphere = TriangleSoup(rings * slices * 3);
+    origin = newOrigin;
+    //Sphere = TriangleSoup(rings * slices * 3);
 }
 
 SphereGenerator::~SphereGenerator()
@@ -113,8 +114,6 @@ TriangleSoup SphereGenerator::generateStl()
                 }
             }
         }
-        // Add the last vertex
-        //points.push_back({-origin[0], origin[1] + radius, origin[2], rings, slices});
 
         //--------------------------------------------------------------------
         //! Add the first pole (rings = 1)
