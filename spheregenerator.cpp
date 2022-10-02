@@ -15,7 +15,7 @@ SphereGenerator::SphereGenerator(double newRadius, int newRings, int newSlices, 
     rings = newRings;
     slices = newSlices;
     origin = newOrigin;
-    //Sphere = TriangleSoup(rings * slices * 3);
+    triangleCount = 0;
 }
 
 SphereGenerator::~SphereGenerator()
@@ -48,10 +48,11 @@ std::vector<double> SphereGenerator::getNormals(Vec A, Vec B, Vec C)
     return n;
 }
 
+
+
 TriangleSoup SphereGenerator::generateStl()
 {
     TriangleSoup Sphere(rings * slices * 3);
-    int triangleCount = 0;
 
     std::ofstream out("sphere.stl");
     if (out.is_open())
@@ -80,8 +81,8 @@ TriangleSoup SphereGenerator::generateStl()
 
                 points.push_back({-x, z, y, r, s});
 
-                std::cout << "(" << x << " " << y << " " << z << ")" << std::endl;
-                std::cout << "r = " << r << " s = " << s << std::endl;
+                // std::cout << "(" << x << " " << y << " " << z << ")" << std::endl;
+                // std::cout << "r = " << r << " s = " << s << std::endl;
 
                 //? DETERMINE HOW TO PLACE TRIANGLES
                 //? First triangle:
@@ -92,28 +93,33 @@ TriangleSoup SphereGenerator::generateStl()
                  */
                 if (points.size() == 3)
                 {
-                    std::vector<double> n;
-                    n = getNormals(points[0], points[1], points[2]);
+                    // std::vector<double> n;
+                    // n = getNormals(points[0], points[1], points[2]);
 
-                    out << "\tfacet normal " << n[0] << " " << n[1] << " " << n[2] << "\n";
-                    out << "\t\touter loop"
-                        << "\n";
+                    // out << "\tfacet normal " << n[0] << " " << n[1] << " " << n[2] << "\n";
+                    // out << "\t\touter loop"
+                    //     << "\n";
 
-                    out << "\t\t\tvertex " << points[0].x << " " << points[0].y << " " << points[0].z << "\n";
-                    Sphere[triangleCount].A = {points[0].x, points[0].y, points[0].z, points[0].ringIndex, points[0].sliceIndex};
-                    out << "\t\t\tvertex " << points[1].x << " " << points[1].y << " " << points[1].z << "\n";
-                    Sphere[triangleCount].B = {points[1].x, points[1].y, points[1].z, points[1].ringIndex, points[1].sliceIndex};
-                    out << "\t\t\tvertex " << points[2].x << " " << points[2].y << " " << points[2].z << "\n";
-                    Sphere[triangleCount].C = {points[2].x, points[2].y, points[2].z, points[2].ringIndex, points[2].sliceIndex};
+                    // out << "\t\t\tvertex " << points[0].x << " " << points[0].y << " " << points[0].z << "\n";
+                    
+                    // out << "\t\t\tvertex " << points[1].x << " " << points[1].y << " " << points[1].z << "\n";
+                    // Sphere[triangleCount].B = {points[1].x, points[1].y, points[1].z, points[1].ringIndex, points[1].sliceIndex};
+                    // out << "\t\t\tvertex " << points[2].x << " " << points[2].y << " " << points[2].z << "\n";
+                    // Sphere[triangleCount].C = {points[2].x, points[2].y, points[2].z, points[2].ringIndex, points[2].sliceIndex};
+                    // triangleCount++;
+
+                    // out << "\t\tendloop"
+                    //     << "\n";
+                    // out << "\tendfacet"
+                    //     << "\n";
+                    Sphere[0].A = {points[0].x, points[0].y, points[0].z, points[0].ringIndex, points[0].sliceIndex};
+                    Sphere[0].B = {points[1].x, points[1].y, points[1].z, points[1].ringIndex, points[1].sliceIndex};
+                    Sphere[0].C = {points[2].x, points[2].y, points[2].z, points[2].ringIndex, points[2].sliceIndex};
                     triangleCount++;
-
-                    out << "\t\tendloop"
-                        << "\n";
-                    out << "\tendfacet"
-                        << "\n";
                 }
             }
         }
+
 
         //--------------------------------------------------------------------
         //! Add the first pole (rings = 1)
@@ -141,45 +147,14 @@ TriangleSoup SphereGenerator::generateStl()
                 auto index = std::distance(points.begin(), it);
                 Sphere[triangleCount].C = {points[index].x, points[index].y, points[index].z, points[index].ringIndex, points[index].sliceIndex};
 
-                std::vector<double> n;
-                n = getNormals(Sphere[triangleCount].A, Sphere[triangleCount].B, Sphere[triangleCount].C);
-
-                out << "\tfacet normal " << n[0] << " " << n[1] << " " << n[2] << "\n";
-                out << "\t\touter loop"
-                    << "\n";
-
-                out << "\t\t\tvertex " << Sphere[triangleCount].A.x << " " << Sphere[triangleCount].A.y << " " << Sphere[triangleCount].A.z << "\n";
-                out << "\t\t\tvertex " << Sphere[triangleCount].B.x << " " << Sphere[triangleCount].B.y << " " << Sphere[triangleCount].B.z << "\n";
-                out << "\t\t\tvertex " << Sphere[triangleCount].C.x << " " << Sphere[triangleCount].C.y << " " << Sphere[triangleCount].C.z << "\n";
-
-                out << "\t\tendloop"
-                    << "\n";
-                out << "\tendfacet"
-                    << "\n";
-
-                triangleCount++;
+                
             }
+            triangleCount++;
         }
         // Last triangle of a ring------------------------------------------------------------------------------------------------
         Sphere[triangleCount].A = Sphere[0].A;
         Sphere[triangleCount].B = Sphere[0].C;
         Sphere[triangleCount].C = Sphere[0].B;
-
-        std::vector<double> n;
-        n = getNormals(Sphere[triangleCount].A, Sphere[triangleCount].B, Sphere[triangleCount].C);
-
-        out << "\tfacet normal " << -n[0] << " " << -n[1] << " " << n[2] << "\n";
-        out << "\t\touter loop"
-            << "\n";
-
-        out << "\t\t\tvertex " << Sphere[triangleCount].A.x << " " << Sphere[triangleCount].A.y << " " << Sphere[triangleCount].A.z << "\n";
-        out << "\t\t\tvertex " << Sphere[triangleCount].B.x << " " << Sphere[triangleCount].B.y << " " << -Sphere[triangleCount].B.z << "\n";
-        out << "\t\t\tvertex " << Sphere[triangleCount].C.x << " " << Sphere[triangleCount].C.y << " " << Sphere[triangleCount].C.z << "\n";
-
-        out << "\t\tendloop"
-            << "\n";
-        out << "\tendfacet"
-            << "\n";
 
         triangleCount++;
 
@@ -219,26 +194,9 @@ TriangleSoup SphereGenerator::generateStl()
                 {
                     auto index = std::distance(points.begin(), it3);
                     Sphere[triangleCount].C = {points[index].x, points[index].y, points[index].z, points[index].ringIndex, points[index].sliceIndex};
-                }
-
-                    std::vector<double> n;
-                    n = getNormals(Sphere[triangleCount].A, Sphere[triangleCount].B, Sphere[triangleCount].C);
-
-                    out << "\tfacet normal " << n[0] << " " << n[1] << " " << n[2] << "\n";
-                    out << "\t\touter loop"
-                        << "\n";
-
-                    out << "\t\t\tvertex " << Sphere[triangleCount].A.x << " " << Sphere[triangleCount].A.y << " " << Sphere[triangleCount].A.z << "\n";
-                    out << "\t\t\tvertex " << Sphere[triangleCount].B.x << " " << Sphere[triangleCount].B.y << " " << Sphere[triangleCount].B.z << "\n";
-                    out << "\t\t\tvertex " << Sphere[triangleCount].C.x << " " << Sphere[triangleCount].C.y << " " << Sphere[triangleCount].C.z << "\n";
-
-                    out << "\t\tendloop"
-                        << "\n";
-                    out << "\tendfacet"
-                        << "\n";
 
                     triangleCount++;
-
+                }
 
                 // Adding second triangle
                 Sphere[triangleCount].A = Sphere[triangleCount - 1].C;
@@ -251,19 +209,6 @@ TriangleSoup SphereGenerator::generateStl()
                 {
                     auto index = std::distance(points.begin(), it);
                     Sphere[triangleCount].C = {points[index].x, points[index].y, points[index].z, points[index].ringIndex, points[index].sliceIndex};
-
-                    std::vector<double> n;
-                    n = getNormals(Sphere[triangleCount].A, Sphere[triangleCount].B, Sphere[triangleCount].C);
-
-                    out << "\tfacet normal " << n[0] << " " << n[1] << " " << n[2] << "\n";
-                    out << "\t\touter loop" << "\n";
-
-                    out << "\t\t\tvertex " << Sphere[triangleCount].A.x << " " << Sphere[triangleCount].A.y << " " << Sphere[triangleCount].A.z << "\n";
-                    out << "\t\t\tvertex " << Sphere[triangleCount].B.x << " " << Sphere[triangleCount].B.y << " " << Sphere[triangleCount].B.z << "\n";
-                    out << "\t\t\tvertex " << Sphere[triangleCount].C.x << " " << Sphere[triangleCount].C.y << " " << Sphere[triangleCount].C.z << "\n";
-
-                    out << "\t\tendloop" << "\n";
-                    out << "\tendfacet" << "\n";
 
                     triangleCount++;
                 }
@@ -304,21 +249,21 @@ TriangleSoup SphereGenerator::generateStl()
                     Sphere[triangleCount].C = {points[index].x, points[index].y, points[index].z, points[index].ringIndex, points[index].sliceIndex};
                 }
 
-                    std::vector<double> n;
-                    n = getNormals(Sphere[triangleCount].A, Sphere[triangleCount].B, Sphere[triangleCount].C);
+                    // std::vector<double> n;
+                    // n = getNormals(Sphere[triangleCount].A, Sphere[triangleCount].B, Sphere[triangleCount].C);
 
-                    out << "\tfacet normal " << n[0] << " " << n[1] << " " << n[2] << "\n";
-                    out << "\t\touter loop"
-                        << "\n";
+                    // out << "\tfacet normal " << n[0] << " " << n[1] << " " << n[2] << "\n";
+                    // out << "\t\touter loop"
+                    //     << "\n";
 
-                    out << "\t\t\tvertex " << Sphere[triangleCount].A.x << " " << Sphere[triangleCount].A.y << " " << Sphere[triangleCount].A.z << "\n";
-                    out << "\t\t\tvertex " << Sphere[triangleCount].B.x << " " << Sphere[triangleCount].B.y << " " << Sphere[triangleCount].B.z << "\n";
-                    out << "\t\t\tvertex " << Sphere[triangleCount].C.x << " " << Sphere[triangleCount].C.y << " " << Sphere[triangleCount].C.z << "\n";
+                    // out << "\t\t\tvertex " << Sphere[triangleCount].A.x << " " << Sphere[triangleCount].A.y << " " << Sphere[triangleCount].A.z << "\n";
+                    // out << "\t\t\tvertex " << Sphere[triangleCount].B.x << " " << Sphere[triangleCount].B.y << " " << Sphere[triangleCount].B.z << "\n";
+                    // out << "\t\t\tvertex " << Sphere[triangleCount].C.x << " " << Sphere[triangleCount].C.y << " " << Sphere[triangleCount].C.z << "\n";
 
-                    out << "\t\tendloop"
-                        << "\n";
-                    out << "\tendfacet"
-                        << "\n";
+                    // out << "\t\tendloop"
+                    //     << "\n";
+                    // out << "\tendfacet"
+                    //     << "\n";
 
                     triangleCount++;
 
@@ -335,18 +280,18 @@ TriangleSoup SphereGenerator::generateStl()
                     auto index = std::distance(points.begin(), it);
                     Sphere[triangleCount].C = {points[index].x, points[index].y, points[index].z, points[index].ringIndex, points[index].sliceIndex};
 
-                    std::vector<double> n;
-                    n = getNormals(Sphere[triangleCount].A, Sphere[triangleCount].B, Sphere[triangleCount].C);
+                    // std::vector<double> n;
+                    // n = getNormals(Sphere[triangleCount].A, Sphere[triangleCount].B, Sphere[triangleCount].C);
 
-                    out << "\tfacet normal " << n[0] << " " << n[1] << " " << n[2] << "\n";
-                    out << "\t\touter loop" << "\n";
+                    // out << "\tfacet normal " << n[0] << " " << n[1] << " " << n[2] << "\n";
+                    // out << "\t\touter loop" << "\n";
 
-                    out << "\t\t\tvertex " << Sphere[triangleCount].A.x << " " << Sphere[triangleCount].A.y << " " << Sphere[triangleCount].A.z << "\n";
-                    out << "\t\t\tvertex " << Sphere[triangleCount].B.x << " " << Sphere[triangleCount].B.y << " " << Sphere[triangleCount].B.z << "\n";
-                    out << "\t\t\tvertex " << Sphere[triangleCount].C.x << " " << Sphere[triangleCount].C.y << " " << Sphere[triangleCount].C.z << "\n";
+                    // out << "\t\t\tvertex " << Sphere[triangleCount].A.x << " " << Sphere[triangleCount].A.y << " " << Sphere[triangleCount].A.z << "\n";
+                    // out << "\t\t\tvertex " << Sphere[triangleCount].B.x << " " << Sphere[triangleCount].B.y << " " << Sphere[triangleCount].B.z << "\n";
+                    // out << "\t\t\tvertex " << Sphere[triangleCount].C.x << " " << Sphere[triangleCount].C.y << " " << Sphere[triangleCount].C.z << "\n";
 
-                    out << "\t\tendloop" << "\n";
-                    out << "\tendfacet" << "\n";
+                    // out << "\t\tendloop" << "\n";
+                    // out << "\tendfacet" << "\n";
 
                     triangleCount++;
                 }
@@ -375,25 +320,9 @@ TriangleSoup SphereGenerator::generateStl()
             {
                 auto index = std::distance(points.begin(), it);
                 Sphere[triangleCount].B = {points[index].x, points[index].y, points[index].z, points[index].ringIndex, points[index].sliceIndex};
-            }
-                std::vector<double> n;
-                n = getNormals(Sphere[triangleCount].A, Sphere[triangleCount].B, Sphere[triangleCount].C);
-
-                out << "\tfacet normal " << n[0] << " " << n[1] << " " << n[2] << "\n";
-                out << "\t\touter loop"
-                    << "\n";
-
-                out << "\t\t\tvertex " << Sphere[triangleCount].A.x << " " << Sphere[triangleCount].A.y << " " << Sphere[triangleCount].A.z << "\n";
-                out << "\t\t\tvertex " << Sphere[triangleCount].B.x << " " << Sphere[triangleCount].B.y << " " << Sphere[triangleCount].B.z << "\n";
-                out << "\t\t\tvertex " << Sphere[triangleCount].C.x << " " << Sphere[triangleCount].C.y << " " << Sphere[triangleCount].C.z << "\n";
-
-                out << "\t\tendloop"
-                    << "\n";
-                out << "\tendfacet"
-                    << "\n";
 
                 triangleCount++;
-
+            }
         }
 
         // Last triangle of a ring------------------------------------------------------------------------------------------------
@@ -420,27 +349,41 @@ TriangleSoup SphereGenerator::generateStl()
             Sphere[triangleCount].B = {points[index].x, points[index].y, points[index].z, points[index].ringIndex, points[index].sliceIndex};
         }
 
-        //std::vector<double> n;
-        n = getNormals(Sphere[triangleCount].A, Sphere[triangleCount].B, Sphere[triangleCount].C);
-
-        out << "\tfacet normal " << -n[0] << " " << -n[1] << " " << n[2] << "\n";
-        out << "\t\touter loop"
-            << "\n";
-
-        out << "\t\t\tvertex " << Sphere[triangleCount].A.x << " " << Sphere[triangleCount].A.y << " " << Sphere[triangleCount].A.z << "\n";
-        out << "\t\t\tvertex " << Sphere[triangleCount].B.x << " " << Sphere[triangleCount].B.y << " " << -Sphere[triangleCount].B.z << "\n";
-        out << "\t\t\tvertex " << Sphere[triangleCount].C.x << " " << Sphere[triangleCount].C.y << " " << Sphere[triangleCount].C.z << "\n";
-
-        out << "\t\tendloop"
-            << "\n";
-        out << "\tendfacet"
-            << "\n";
-
         triangleCount++;
+    }
+    return Sphere;
+}
 
-    
+void SphereGenerator::print(TriangleSoup Sphere)
+{   
+    std::ofstream out("sphere.stl");
+    if (out.is_open())
+    {
+        out << "solid sphere" << "\n";
+        double x, y, z;
+        
+        for (int i = 0; i < triangleCount; i++)
+        {
+            std::vector<double> n;
+            n = getNormals(Sphere[i].A, Sphere[i].B, Sphere[i].C);
+
+            out << "\tfacet normal " << n[0] << " " << n[1] << " " << n[2] << "\n";
+            out << "\t\touter loop" << "\n";
+
+            out << "\t\t\tvertex " << Sphere[i].A.x << " " << Sphere[i].A.y << " " << Sphere[i].A.z << "\n";
+            out << "\t\t\tvertex " << Sphere[i].B.x << " " << Sphere[i].B.y << " " << Sphere[i].B.z << "\n";
+            out << "\t\t\tvertex " << Sphere[i].C.x << " " << Sphere[i].C.y << " " << Sphere[i].C.z << "\n";
+
+            out << "\t\tendloop" << "\n";
+            out << "\tendfacet" << "\n";           
+        }
         out << "endsolid sphere" << "\n";
         out.close();
     }
-    return Sphere;
+}
+
+void SphereGenerator::exec()
+{
+    TriangleSoup Sphere = generateStl();
+    print(Sphere);
 }
