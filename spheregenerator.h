@@ -1,5 +1,5 @@
 #include <vector>
-
+#include <string>
 struct Vec
 {
     double x, y, z;
@@ -29,12 +29,13 @@ private:
 
     std::vector<double> origin;
     std::vector<double> getNormals(Vec A, Vec B, Vec C);
+    std::string fileName;
 
     TriangleSoup generateStl();
 
 public:
     SphereGenerator();
-    SphereGenerator(double radius, int rings, int slices, std::vector<double> origin, bool logsEnabled);
+    SphereGenerator(double radius, int rings, int slices, std::vector<double> origin, bool logsEnabled, std::string fileName);
     ~SphereGenerator();
 
     void exec();

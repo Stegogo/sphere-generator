@@ -9,14 +9,10 @@ SphereGenerator::SphereGenerator(/* args */)
 {
 }
 
-SphereGenerator::SphereGenerator(double newRadius, int newRings, int newSlices, std::vector<double> newOrigin, bool newLogs)
+SphereGenerator::SphereGenerator(double newRadius, int newRings, int newSlices, std::vector<double> newOrigin, bool newLogs, std::string newFileName)
+: radius(newRadius), rings(newRadius), slices(newSlices), origin(newOrigin), logsEnabled(newLogs), fileName(newFileName), triangleCount(0)
 {
-    radius = newRadius;
-    rings = newRings;
-    slices = newSlices;
-    origin = newOrigin;
-    logsEnabled = newLogs;
-    triangleCount = 0;
+
 }
 
 SphereGenerator::~SphereGenerator()
@@ -56,10 +52,6 @@ TriangleSoup SphereGenerator::generateStl()
     TriangleSoup Sphere(rings * slices * 3);
 
     std::ofstream out("sphere.stl");
-    if (out.is_open())
-    {
-        out << "solid sphere"
-            << "\n";
         double x, y, z;
         std::vector<Vec> points;
 
@@ -351,13 +343,12 @@ TriangleSoup SphereGenerator::generateStl()
         }
 
         triangleCount++;
-    }
     return Sphere;
 }
 
 void SphereGenerator::print(TriangleSoup Sphere)
 {   
-    std::ofstream out("sphere.stl");
+    std::ofstream out(fileName);
     if (out.is_open())
     {
         out << "solid sphere" << "\n";
