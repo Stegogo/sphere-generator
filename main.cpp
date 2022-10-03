@@ -27,7 +27,7 @@ void help()
 int main(int argc, char *argv[])
 {
     // Initializing sphere parameters
-    double radius = 1.5;                 // RADIUS
+    double radius = 1;                   // RADIUS
     std::vector<double> origin{0, 0, 0}; // ORIGIN
     int rings = 10;                      // RINGS
     int slices = 10;                     // SLICES
@@ -44,15 +44,15 @@ int main(int argc, char *argv[])
                 break; 
             case 'R':
                 printf("Radius: %s\n", optarg); 
-                // radius = (double)optarg;
+                radius = atof(optarg);
                 break;
             case 'r':
                 printf("Horiontal segments: %s\n", optarg); 
-                // rings = (int)optarg;
+                rings = atoi(optarg);
                 break; 
             case 's': 
                 printf("Vertical segments: %s\n", optarg);
-                // slices = (int)optarg;
+                slices = atoi(optarg);
                 break;
             case 'h':
                 help();
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
                 break; 
         } 
     } 
-
+    
     // Calling a function to give us an ASCII STL file
     SphereGenerator sg(radius,rings, slices, origin, logs);
     sg.exec();
