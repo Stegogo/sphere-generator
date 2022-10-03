@@ -23,6 +23,8 @@ private:
     int slices;
     int triangleCount;
 
+    bool logsEnabled;
+
     void print(TriangleSoup Sphere);
 
     std::vector<double> origin;
@@ -32,7 +34,7 @@ private:
 
 public:
     SphereGenerator();
-    SphereGenerator(double radius, int rings, int slices, std::vector<double> origin);
+    SphereGenerator(double radius, int rings, int slices, std::vector<double> origin, bool logsEnabled);
     ~SphereGenerator();
 
     void exec();

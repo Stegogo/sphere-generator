@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
     std::vector<double> origin{0, 0, 0}; // ORIGIN
     int rings = 10;                      // RINGS
     int slices = 10;                     // SLICES
+    bool logs = false;
     int opt;
 
     while((opt = getopt(argc, argv, "R:r:s:lh")) != -1) 
@@ -39,6 +40,7 @@ int main(int argc, char *argv[])
         { 
             case 'l': 
                 printf("Logs: enabled"); 
+                logs = true;
                 break; 
             case 'R':
                 printf("Radius: %s\n", optarg); 
@@ -54,6 +56,7 @@ int main(int argc, char *argv[])
                 break;
             case 'h':
                 help();
+                return 0;
                 break;
             case '?': 
                 printf("Unknown option: %c!!\nUse -h flag for help", optopt);
@@ -62,7 +65,7 @@ int main(int argc, char *argv[])
     } 
 
     // Calling a function to give us an ASCII STL file
-    SphereGenerator sg(radius,rings, slices, origin);
+    SphereGenerator sg(radius,rings, slices, origin, logs);
     sg.exec();
     return 0;
 }

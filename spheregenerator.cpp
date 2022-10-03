@@ -9,12 +9,13 @@ SphereGenerator::SphereGenerator(/* args */)
 {
 }
 
-SphereGenerator::SphereGenerator(double newRadius, int newRings, int newSlices, std::vector<double> newOrigin)
+SphereGenerator::SphereGenerator(double newRadius, int newRings, int newSlices, std::vector<double> newOrigin, bool newLogs)
 {
     radius = newRadius;
     rings = newRings;
     slices = newSlices;
     origin = newOrigin;
+    logsEnabled = newLogs;
     triangleCount = 0;
 }
 
@@ -125,7 +126,7 @@ TriangleSoup SphereGenerator::generateStl()
         //! Add the first pole (rings = 1)
         //--------------------------------------------------------------------
 
-        for (int s = 0; s < slices; s++)
+        for (int s = 0; s < slices - 1; s++)
         {
             /*
              * Constructing the first pole of the Sphere
@@ -146,11 +147,11 @@ TriangleSoup SphereGenerator::generateStl()
             {
                 auto index = std::distance(points.begin(), it);
                 Sphere[triangleCount].C = {points[index].x, points[index].y, points[index].z, points[index].ringIndex, points[index].sliceIndex};
-
                 
             }
             triangleCount++;
         }
+
         // Last triangle of a ring------------------------------------------------------------------------------------------------
         Sphere[triangleCount].A = Sphere[0].A;
         Sphere[triangleCount].B = Sphere[0].C;
@@ -375,10 +376,18 @@ void SphereGenerator::print(TriangleSoup Sphere)
             out << "\t\t\tvertex " << Sphere[i].C.x << " " << Sphere[i].C.y << " " << Sphere[i].C.z << "\n";
 
             out << "\t\tendloop" << "\n";
-            out << "\tendfacet" << "\n";           
+            out << "\tendfacet" << "\n"; 
+
+            if(logsEnabled)
+            {
+                printf("\n△ #%i \n\tA: %d, %d, %d\n\tB: %d, %d, %d\n\tC: %d, %d, %d \n", i, Sphere[i].A.x, Sphere[i].A.y, Sphere[i].A.z, Sphere[i].B.x, Sphere[i].B.y, Sphere[i].B.z, Sphere[i].C.x, Sphere[i].C.y, Sphere[i].C.z);
+            }         
         }
         out << "endsolid sphere" << "\n";
+        printf("Done! Your .stl file is at %s.", "../sphere.stl");
         out.close();
+
+        
     }
 }
 
