@@ -1,4 +1,4 @@
-# generate-stl-sphere
+# sphere-generator
  ```
             _                                   
   ___ _ __ | |__   ___ _ __ ___  __ _  ___ _ __  
