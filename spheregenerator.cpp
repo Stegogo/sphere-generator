@@ -395,7 +395,7 @@ void SphereGenerator::print(TriangleSoup Sphere)
 
             if(logsEnabled)
             {
-                printf("\n△ #%i \n\tA: %d, %d, %d\n\tB: %d, %d, %d\n\tC: %d, %d, %d \n", i, Sphere[i].A.x, Sphere[i].A.y, Sphere[i].A.z, Sphere[i].B.x, Sphere[i].B.y, Sphere[i].B.z, Sphere[i].C.x, Sphere[i].C.y, Sphere[i].C.z);
+                printf("\n△ #%i \n\tA: %f, %f, %f\n\tB: %f, %f, %f\n\tC: %f, %f, %f \n", i, Sphere[i].A.x, Sphere[i].A.y, Sphere[i].A.z, Sphere[i].B.x, Sphere[i].B.y, Sphere[i].B.z, Sphere[i].C.x, Sphere[i].C.y, Sphere[i].C.z);
             }         
         }
         out << "endsolid sphere" << "\n";
