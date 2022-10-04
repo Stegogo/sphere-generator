@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/spheregen.dir/main.cpp.o CMakeFiles/spheregen.dir/spheregenerator.cpp.o -o bin/spheregen 

@@ -1,0 +1,3 @@
+/home/maru/Work/misc/generate-stl-sphere/build/CMakeFiles/spheregen.dir
+/home/maru/Work/misc/generate-stl-sphere/build/CMakeFiles/edit_cache.dir
+/home/maru/Work/misc/generate-stl-sphere/build/CMakeFiles/rebuild_cache.dir
