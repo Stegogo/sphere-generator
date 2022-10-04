@@ -41,21 +41,44 @@ int main(int argc, char *argv[])
         switch(opt) 
         { 
             case 'l': 
-                printf("Logs: enabled"); 
+                printf("Logs: enabled\n"); 
                 logs = true;
                 break; 
             case 'R':
+                try
+                {
+                    radius = std::stof(optarg);
+                }
+                catch(const std::exception& e)
+                {
+                    printf("Error: Invalid argument\n");
+                    return 0;
+                }
                 printf("Radius: %s\n", optarg);
-                
-                radius = atof(optarg);
                 break;
             case 'r':
-                printf("Horiontal segments: %s\n", optarg); 
-                rings = atoi(optarg);
+                try
+                {
+                    rings = std::stoi(optarg);
+                }
+                catch(const std::exception& e)
+                {
+                    printf("Error: Invalid argument\n");
+                    return 0;
+                }
+                printf("Horizontal segments: %s\n", optarg); 
                 break; 
-            case 's': 
+            case 's':
+                try
+                {
+                    slices = std::stoi(optarg);
+                }
+                catch(const std::exception& e)
+                {
+                    printf("Error: Invalid argument\n");
+                    return 0;
+                }
                 printf("Vertical segments: %s\n", optarg);
-                slices = atoi(optarg);
                 break;
             case 'n':
                 printf("Filename: %s\n", optarg);
@@ -66,7 +89,7 @@ int main(int argc, char *argv[])
                 return 0;
                 break;
             case '?': 
-                printf("Unknown option: %c!!\nUse -h flag for help", optopt);
+                printf("Use -h flag for help\n");
                 return 0;
                 break; 
         } 

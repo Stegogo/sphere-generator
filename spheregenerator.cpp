@@ -10,9 +10,14 @@ SphereGenerator::SphereGenerator(/* args */)
 }
 
 SphereGenerator::SphereGenerator(double newRadius, int newRings, int newSlices, std::vector<double> newOrigin, bool newLogs, std::string newFileName)
-: radius(newRadius), rings(newRadius), slices(newSlices), origin(newOrigin), logsEnabled(newLogs), fileName(newFileName), triangleCount(0)
 {
-
+    radius = newRadius;
+    rings = newRings;
+    slices = newSlices;
+    origin = newOrigin;
+    logsEnabled = newLogs;
+    fileName = newFileName;
+    triangleCount = 0;
 }
 
 SphereGenerator::~SphereGenerator()
@@ -51,7 +56,11 @@ TriangleSoup SphereGenerator::generateStl()
 {
     TriangleSoup Sphere(rings * slices * 3);
 
-    std::ofstream out("sphere.stl");
+    // std::ofstream out("sphere.stl");
+    // if (out.is_open())
+    // {
+    //     out << "solid sphere"
+    //         << "\n";
         double x, y, z;
         std::vector<Vec> points;
 
@@ -140,6 +149,20 @@ TriangleSoup SphereGenerator::generateStl()
                 auto index = std::distance(points.begin(), it);
                 Sphere[triangleCount].C = {points[index].x, points[index].y, points[index].z, points[index].ringIndex, points[index].sliceIndex};
                 
+            }
+
+            if (s == slices - 2)
+            {
+                // find a Vertex with r = 1 s = 1
+                auto it = std::find_if(points.begin(), points.end(), [&](const Vec vertex)
+                                    { return vertex.ringIndex == 1 && vertex.sliceIndex == Sphere[0].B.sliceIndex; });
+
+                if (it != points.end())
+                {
+                    auto index = std::distance(points.begin(), it);
+                    Sphere[triangleCount].C = {points[index].x, points[index].y, points[index].z, points[index].ringIndex, points[index].sliceIndex};
+                    
+                }
             }
             triangleCount++;
         }
@@ -343,6 +366,7 @@ TriangleSoup SphereGenerator::generateStl()
         }
 
         triangleCount++;
+    //}
     return Sphere;
 }
 
@@ -375,7 +399,7 @@ void SphereGenerator::print(TriangleSoup Sphere)
             }         
         }
         out << "endsolid sphere" << "\n";
-        printf("Done! Your .stl file is at %s.", "../sphere.stl");
+        printf("\nDone! Your .stl file is at ../%s.", fileName.c_str());
         out.close();
 
         
